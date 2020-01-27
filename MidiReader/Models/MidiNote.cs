@@ -2,33 +2,33 @@
 using System.Linq;
 
 namespace MidiReader.Models {
-    internal class MidiNote {
+    public class MidiNote {
 
         #region Const Notes Identifier
 
-        private const double C = 0;
+        public const double C = 0;
 
-        private const double Csharp = noteIdentifer;
+        public const double Csharp = noteIdentifer;
 
-        private const double D = 2 * noteIdentifer;
+        public const double D = 2 * noteIdentifer;
 
-        private const double Dsharp = 3 * noteIdentifer;
+        public const double Dsharp = 3 * noteIdentifer;
 
-        private const double E = 4 * noteIdentifer;
+        public const double E = 4 * noteIdentifer;
 
-        private const double F = 5 * noteIdentifer;
+        public const double F = 5 * noteIdentifer;
 
-        private const double Fsharp = 6 * noteIdentifer;
+        public const double Fsharp = 6 * noteIdentifer;
 
-        private const double G = 7 * noteIdentifer;
+        public const double G = 7 * noteIdentifer;
 
-        private const double Gsharp = 8 * noteIdentifer;
+        public const double Gsharp = 8 * noteIdentifer;
 
-        private const double A = 9 * noteIdentifer;
+        public const double A = 9 * noteIdentifer;
 
-        private const double Asharp = 10 * noteIdentifer;
+        public const double Asharp = 10 * noteIdentifer;
 
-        private const double B = 11 * noteIdentifer;
+        public const double B = 11 * noteIdentifer;
         
         /// <summary>
         /// This is not the real identifer. I made this for distinguish each note more easily

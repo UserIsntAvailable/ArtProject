@@ -33,26 +33,26 @@ namespace MidiReader.Utils {
                 eventIndicator = reader.ReadByte().ToString("X");
             }
             else {
+                Console.WriteLine("Running Status Is On");
                 eventIndicator = lastEventIndicator;
             }
 
             // Meta Events
             if (eventIndicator == "FF") {
-
                 return reader.ReadMetaEvent();
             }
 
-            // Sysex Events
+            // Sysex Events ( I don't care about them )
             else if (eventIndicator == "F0" || eventIndicator == "F7") {
 
-                if (eventIndicator == "F0") {
+                var length = (int)reader.ReadVariableLengthQuantity();
 
-                }
-                else {
+                reader.ReadBytes(length);
 
-                }
+                // They are implemented but very poorly ( you can't get the data )
+                return new SysexEvent();
 
-                throw new NotImplementedException("SysexEvents aren't implemented yet");
+                // throw new NotImplementedException("SysexEvents aren't implemented yet");
             }
 
             // Midi Channel Message Events
@@ -72,15 +72,7 @@ namespace MidiReader.Utils {
                             System.Globalization.NumberStyles.HexNumber) + 1;
                     }
 
-                    // Channel Voice Message Event
-                    if (eventIndicator[0] != 'B') {
-                        return reader.ReadChannelVoiceMessageEvent();
-                    }
-
-                    // Channel Mode Message Event
-                    else {
-                        return reader.ReadChannelModeMessageEvent();
-                    }
+                    return reader.ReadChannelMessageEvent();
                 }
 
                 // System Message Events
@@ -243,11 +235,14 @@ namespace MidiReader.Utils {
                     }
                     break;
 
-                // http://www.personal.kent.edu/~sbirch/Music_Production/MP-II/MIDI/midi_system_exclusive_messages.htm
-                case MetaEvents.SystemExclusiveMessage: {
+                case MetaEvents.SequencerSpecific: {
 
-                        throw new NotImplementedException("MetaEvents.SystemExclusiveMessage isn't supported yet");
+                        var indicator = (int)reader.ReadVariableLengthQuantity();
+
+                        // This is pretty much useless
+                        reader.ReadBytes(indicator);
                     }
+                    break;
 
                 default:
                     throw new Exception($"{(int)eventType} is not supported");
@@ -343,6 +338,30 @@ namespace MidiReader.Utils {
         }
 
         /// <summary>
+        /// Reads if the next event is Voice or Mode
+        /// </summary>
+        /// <param name="reader">The reader</param>
+        /// <returns><see cref="MessageEvent"/></returns>
+        private static MessageEvent ReadChannelMessageEvent(this BinaryReader reader) {
+
+            int channelEventIndicator = reader.ReadByte();
+
+            bool isModeEvent = Enum.TryParse(
+                channelEventIndicator.ToString(),
+                out ChannelModeMessageEvents messageEventIndicator);
+
+            if (int.TryParse(messageEventIndicator.ToString(), out _)) {
+                isModeEvent = false;
+            }
+
+            reader.BaseStream.Position -= 1;
+
+            return isModeEvent == false
+                ? reader.ReadChannelVoiceMessageEvent()
+                : reader.ReadChannelModeMessageEvent();
+        }
+
+        /// <summary>
         /// Reads a Channel Voice Message Event from this reader
         /// </summary>
         /// <seealso cref="http://www.personal.kent.edu/~sbirch/Music_Production/MP-II/MIDI/midi_channel_voice_messages.htm"/>
@@ -362,7 +381,7 @@ namespace MidiReader.Utils {
 
                         // The Key/Note that is pressed or relased
                         // Each value is a 'half-step' above or below the adjacent values
-                        string key = MidiNote.GetMidiNoteFromInt(reader.ReadByte());
+                        string key = MidiNote.GetMidiNote(reader.ReadByte());
 
                         // Devices which are not velocity sensitive should send vv = 40
                         var velocity = reader.ReadByte();
@@ -375,7 +394,7 @@ namespace MidiReader.Utils {
 
                         // The Key/Note that is pressed or relased
                         // Each value is a 'half-step' above or below the adjacent values
-                        string key = MidiNote.GetMidiNoteFromInt(reader.ReadByte());
+                        string key = MidiNote.GetMidiNote(reader.ReadByte());
 
                         // Pressure with which key is being pressed
                         var preassure = reader.ReadByte();

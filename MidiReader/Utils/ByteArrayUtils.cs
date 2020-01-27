@@ -8,7 +8,7 @@ namespace MidiReader.Utils {
         /// </summary>
         internal static int HexToInt(this byte[] array) {
 
-            string hex = string.Join("", array.Select(n => n.ToString("X")));
+            string hex = string.Join("", array.Select(n => n.ToString("X2")));
 
             return int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
         }
@@ -19,7 +19,7 @@ namespace MidiReader.Utils {
         /// <returns>The MSB of your byte array</returns>
         internal static int GetMostSignificantBit(this byte[] array) {
 
-            string hex = string.Join("", array.Select(n => n.ToString("X")));
+            string hex = string.Join("", array.Select(n => n.ToString("X2")));
 
             return int.Parse(hex[^1].ToString(), System.Globalization.NumberStyles.HexNumber);
         }
@@ -30,7 +30,7 @@ namespace MidiReader.Utils {
         /// <returns>The MSB of your byte array</returns>
         internal static int GetLeastSignificantBit(this byte[] array) {
 
-            string hex = string.Join("", array.Select(n => n.ToString("X")));
+            string hex = string.Join("", array.Select(n => n.ToString("X2")));
 
             return int.Parse(hex[0].ToString(), System.Globalization.NumberStyles.HexNumber);
         }
