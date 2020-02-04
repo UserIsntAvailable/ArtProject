@@ -21,6 +21,11 @@ namespace MidiReader.Tests {
             Assert.Single(midi.Tracks);
             Assert.Equal(128, midi.PulsesPerQuarterNote);
 
+            // Additional Information
+            Assert.Equal((0, 0), midi.SMTPEFrame);
+            Assert.Equal(120, midi.BeatsPerMinute);
+            Assert.Equal(new byte[2] { 0, 128 }, midi.Division);
+
             // TotalEvents Information
             var allEvents = midi.Tracks[0].Events;
 

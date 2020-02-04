@@ -34,5 +34,19 @@ namespace MidiReader.Utils {
 
             return int.Parse(hex[0].ToString(), System.Globalization.NumberStyles.HexNumber);
         }
+
+        /// <summary>
+        /// Get a SMTPEFrames Division from <see cref="Midi.Division"/>
+        /// </summary>
+        /// <returns>The SMTPEFrames Format</returns>
+        internal static (int, int) GetSMTPEFrames(this byte[] array) {
+
+            var ticksPerFrame = array[0];
+
+            var framesPerSecond = (~array[1] & 0x000000FF) + 1;
+
+            return (ticksPerFrame, framesPerSecond);
+        }
+
     }
 }

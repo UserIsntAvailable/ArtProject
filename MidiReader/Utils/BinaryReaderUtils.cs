@@ -33,7 +33,7 @@ namespace MidiReader.Utils {
                 eventIndicator = reader.ReadByte().ToString("X");
             }
             else {
-                Console.WriteLine("Running Status Is On");
+                throw new NotImplementedException("Running Status isn't full finished");
                 eventIndicator = lastEventIndicator;
             }
 
@@ -42,17 +42,14 @@ namespace MidiReader.Utils {
                 return reader.ReadMetaEvent();
             }
 
-            // Sysex Events ( I don't care about them )
+            // Sysex Events ( I don't care too much about them )
             else if (eventIndicator == "F0" || eventIndicator == "F7") {
 
                 var length = (int)reader.ReadVariableLengthQuantity();
 
-                reader.ReadBytes(length);
+                var sysexData = reader.ReadBytes(length);
 
-                // They are implemented but very poorly ( you can't get the data )
-                return new SysexEvent();
-
-                // throw new NotImplementedException("SysexEvents aren't implemented yet");
+                return new SysexEvent(sysexData);
             }
 
             // Midi Channel Message Events
@@ -171,6 +168,7 @@ namespace MidiReader.Utils {
                         // Useless
                         reader.ReadByte();
 
+                        // This convert tempo of Microseconds/QuarterNote to Beats Per Minute ( BPM )
                         var tempo = (int)Math.Round(60 / ((double)reader.ReadBytes(3).HexToInt() / 1000000));
 
                         eventData = $"{tempo} BPM";
@@ -241,6 +239,8 @@ namespace MidiReader.Utils {
 
                         // This is pretty much useless
                         reader.ReadBytes(indicator);
+
+                        eventData = "Some SequencerSpecific Data";
                     }
                     break;
 
