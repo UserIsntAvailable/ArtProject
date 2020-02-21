@@ -53,7 +53,7 @@ namespace MidiReader.Models {
 
                     // The default BPM if is not specified
                     ? 120
-                    : int.Parse(tempoMetaEvents.First().EventData);
+                    : int.Parse(tempoMetaEvents.First().EventData.Replace(" BPM", ""));
             }
         }
 

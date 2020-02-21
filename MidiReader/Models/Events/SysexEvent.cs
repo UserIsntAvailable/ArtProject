@@ -18,7 +18,7 @@
         #region Public Properties
 
         /// <summary>
-        /// The Data of the sysex event ( you will need to read it by yourself )
+        /// The data of the sysex event ( you will need to read it by yourself if you need it )
         /// </summary>
         public byte[] EventData { get; set; }
 

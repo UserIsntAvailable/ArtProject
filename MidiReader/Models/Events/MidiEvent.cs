@@ -1,4 +1,6 @@
-﻿namespace MidiReader.Models.Events {
+﻿using System;
+
+namespace MidiReader.Models.Events {
     public struct MidiEvent {
 
         #region Constructor
@@ -36,14 +38,14 @@
         public string EventInformation => Event.EventInformation;
 
         /// <summary>
-        /// The Enum that define the Event
+        /// The string representation of the Enum that define the Event
         /// </summary>
         public string EventType => EventInformation.Split(" ")[0].Replace(":", "");
 
         /// <summary>
         /// The data that contains that Event
         /// </summary>
-        public string EventData => string.Join(" ", EventInformation.Split(" ")[1..^2]);
+        public string EventData => string.Join(" ", EventInformation.Split(" ")[1..]);
         #endregion
     }
 }
